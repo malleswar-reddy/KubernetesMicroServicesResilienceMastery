@@ -22,6 +22,10 @@ public class PaymentService {
     @Value("${investment.service.url:http://localhost:8083}")
     private String investmentServiceUrl;
 
+    // Tracks the current jitter factor from config for observability/logging.
+    // The actual retry behavior is controlled by application.yml (or ConfigMap via @RefreshScope).
+    // When jitter-tuner updates the ConfigMap and triggers a /actuator/refresh, Spring
+    // re-injects this value so logs reflect the live jitter setting in use.
     @Value("${resilience4j.retry.instances.investment.randomizedWaitFactor:0.3}")
     private double jitterFactor;
 
