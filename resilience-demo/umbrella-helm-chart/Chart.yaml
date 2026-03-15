@@ -1,0 +1,16 @@
+apiVersion: v2
+name: resilience-demo
+description: Umbrella Helm chart for Spring Boot Microservices Resilience Demo
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+dependencies:
+  - name: order-processing-service
+    version: "1.0.0"
+    repository: "file://charts/order-processing-service"
+  - name: payment-service
+    version: "1.0.0"
+    repository: "file://charts/payment-service"
+  - name: investment-service
+    version: "1.0.0"
+    repository: "file://charts/investment-service"

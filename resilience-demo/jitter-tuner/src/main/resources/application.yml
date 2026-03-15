@@ -1,0 +1,19 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: jitter-tuner
+
+jitter:
+  min: 0.2
+  max: 0.5
+  initial: 0.3
+  increment: 0.1
+  decrement: 0.05
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

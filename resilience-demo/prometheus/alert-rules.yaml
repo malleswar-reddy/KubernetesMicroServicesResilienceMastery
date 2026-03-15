@@ -1,0 +1,20 @@
+groups:
+  - name: resilience
+    rules:
+      - alert: HighRetryStorm
+        expr: rate(resilience4j_retry_calls_total{kind="failed_with_retry"}[5m]) > 0.5
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High retry storm detected"
+          description: "Retry call rate is above threshold for {{ $labels.instance }}"
+
+      - alert: CircuitBreakerOpen
+        expr: resilience4j_circuitbreaker_state{state="open"} == 1
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Circuit breaker is open"
+          description: "Circuit breaker {{ $labels.name }} is in OPEN state on {{ $labels.instance }}"

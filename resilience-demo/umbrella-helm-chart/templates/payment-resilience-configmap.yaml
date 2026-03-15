@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment-resilience-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: payment-service
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+data:
+  randomizedWaitFactor: "0.3"
+  maxAttempts: "5"
+  waitDuration: "300ms"
+  slidingWindowSize: "100"
+  failureRateThreshold: "50"
+  waitDurationInOpenState: "30s"

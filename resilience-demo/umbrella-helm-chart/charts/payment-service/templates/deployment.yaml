@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-payment-service
+  labels:
+    app: payment-service
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: payment-service
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: payment-service
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: payment-service
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 8082
+          env:
+            - name: INVESTMENT_SERVICE_URL
+              value: {{ .Values.env.INVESTMENT_SERVICE_URL | quote }}
+          envFrom:
+            - configMapRef:
+                name: payment-resilience-config
+                optional: true
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8082
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8082
+            initialDelaySeconds: 20
+            periodSeconds: 10
